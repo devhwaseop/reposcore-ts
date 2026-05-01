@@ -1,3 +1,5 @@
+roo = true
+
 [*]
 charset = utf-8                # 대부분의 TS 프로젝트 기본 인코딩
 end_of_line = lf
