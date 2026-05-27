@@ -7,7 +7,8 @@ import {summarizeRepo, writeOutputFiles} from './output';
 import type {RepoSummary} from './output';
 
 const cli = cac("reposcore-ts");
-cli.version(pkg.version, { flags: ["--version"] });
+cli.version(pkg.version);
+
 
 
 
