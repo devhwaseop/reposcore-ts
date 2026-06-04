@@ -316,3 +316,34 @@ export const writeOutputFiles = async (
 
   return written;
 };
+
+/**
+ * 선점 현황 데이터를 표준 출력(stdout)에 사람이 읽기 좋은 형태로 출력합니다.
+ *
+ * @param claims 저장소별 선점 및 미선점 이슈 정보
+ */
+export const printClaims = (claims: RepoClaims): void => {
+  console.log(`\n[${claims.repoPath}]`);
+
+  console.log('Claimed Issues');
+  if (claims.claimed.length === 0) {
+    console.log('  (없음)');
+  } else {
+    for (const c of claims.claimed) {
+      console.log(`- #${c.issueNumber} ${c.title}`);
+      console.log(`  URL: ${c.url}`);
+      console.log(`  Claimed by: ${c.claimedBy}`);
+      console.log(`  Matched keyword: ${c.matchedKeyword}`);
+    }
+  }
+
+  console.log('\nUnclaimed Issues');
+  if (claims.unclaimed.length === 0) {
+    console.log('  (없음)');
+  } else {
+    for (const u of claims.unclaimed) {
+      console.log(`- #${u.issueNumber} ${u.title}`);
+      console.log(`  URL: ${u.url}`);
+    }
+  }
+};

@@ -83,3 +83,29 @@ export interface DetailedRepoData {
   /** 수집된 이슈 목록. */
   issues: IssueRecord[];
 }
+
+/** 선점된 이슈 정보 */
+export interface ClaimInfo {
+  issueNumber: number;
+  title: string;
+  url: string;
+  claimedBy: string | null;
+  matchedKeyword: string | null;
+}
+
+/** 저장소별 선점 현황 */
+export interface RepoClaims {
+  repoPath: string;
+  claimed: ClaimInfo[];
+  unclaimed: ClaimInfo[];
+}
+
+/** 선점 현황 조회를 위한 서비스 인터페이스 확장 */
+export interface ClaimService {
+  getRecentClaimsData(
+    owner: string,
+    repoName: string,
+    keywords: string[],
+    repoPath: string,
+  ): Promise<RepoClaims>;
+}
