@@ -211,6 +211,7 @@ cli
               repoName,
               claimKeywords,
               repoPath,
+              useCache,
             );
             printClaims(claims);
           } catch (error: unknown) {
