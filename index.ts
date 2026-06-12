@@ -41,6 +41,31 @@ function parseRepoPath(repoPath: string) {
   };
 }
 
+/**
+ * CLI 원본 인자에서 --keywords 옵션이 명시적으로 입력되었는지와 값을 확인합니다.
+ */
+function getExplicitKeywordsValue(argv: string[]): string | null {
+  const optionIndex = argv.findIndex(
+    arg => arg === '--keywords' || arg.startsWith('--keywords='),
+  );
+
+  if (optionIndex === -1) {
+    return null;
+  }
+
+  const option = argv[optionIndex]!;
+  if (option.startsWith('--keywords=')) {
+    return option.slice('--keywords='.length);
+  }
+
+  const value = argv[optionIndex + 1];
+  if (!value || value.startsWith('-')) {
+    return '';
+  }
+
+  return value;
+}
+
 cli
   .command('[...repos]', '대상 저장소 목록 (예: owner/repo1 owner/repo2)')
   .option('-t, --token <token>', 'GitHub Personal Access Token', {
@@ -116,13 +141,27 @@ cli
         "I'll take this",
       ];
 
-      const claimKeywords =
-        typeof options.keywords === 'string'
+      const explicitKeywordsValue = getExplicitKeywordsValue(process.argv);
+      const rawKeywords =
+        explicitKeywordsValue ??
+        (typeof options.keywords === 'string'
           ? options.keywords
-              .split(',')
-              .map(k => k.trim())
-              .filter(Boolean)
-          : DEFAULT_KEYWORDS;
+          : DEFAULT_KEYWORDS.join(','));
+
+      const claimKeywords = rawKeywords
+        .split(',')
+        .map(k => k.trim())
+        .filter(Boolean);
+
+      if (
+        isClaimsMode &&
+        explicitKeywordsValue !== null &&
+        claimKeywords.length === 0
+      ) {
+        errors.push(
+          '오류: --keywords에는 하나 이상의 선점 키워드를 입력해야 합니다.',
+        );
+      }
 
       const parsedRepos: {
         repoPath: string;
