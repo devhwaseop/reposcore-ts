@@ -3,13 +3,15 @@ name: Docs Synopsis Validation
 on:
   pull_request:
     paths:
-      - "tools/update-synopsis.py"
-      - "tools/j2render.py"
+      - "README.md"
+      - "README-template.md"
       - "index.ts"
+      - "Makefile"
       - "package.json"
       - "bun.lock"
-      - "Makefile"
-      - "README-template.md.j2"
+      - "tools/build-synopsis-data.py"
+      - "tools/build-docs-data.py"
+      - "docs/*.md"
 
 jobs:
   verify-docs-synopsis:
